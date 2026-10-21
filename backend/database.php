@@ -1,10 +1,13 @@
 <?php
 declare(strict_types=1);
 
-$host = 'localhost';
-$dbname = 'gym_membership_db';
-$username = getenv('GYM_DB_USERNAME') ?: 'root';
-$password = getenv('GYM_DB_PASSWORD') ?: '';
+$localConfigPath = __DIR__ . '/database.config.php';
+$databaseConfig = is_file($localConfigPath) ? require $localConfigPath : [];
+
+$host = $databaseConfig['host'] ?? (getenv('GYM_DB_HOST') ?: 'localhost');
+$dbname = $databaseConfig['dbname'] ?? (getenv('GYM_DB_NAME') ?: 'gym_membership_db');
+$username = $databaseConfig['username'] ?? (getenv('GYM_DB_USERNAME') ?: 'root');
+$password = $databaseConfig['password'] ?? (getenv('GYM_DB_PASSWORD') ?: '');
 
 try {
     $conn = new PDO(
